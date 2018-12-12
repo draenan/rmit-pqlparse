@@ -34,24 +34,38 @@ def output_as_json(data):
     print json.dumps(data, indent=4)
 
 
-def output_as_csv(data):
+def output_as_csv(data, fact_mappings=None):
     """ Go away pylint. """
 
+    column_names = []
     fact_names = []
 
-    for obj in data:
-        for key in obj:
-            if key != 'certname':
-                fact_names.append(key)
+    if fact_mappings:
+        fact_maps = fact_mappings.split(',')
+        for fact_map in fact_maps:
+            try:
+                fact_name, column_name = fact_map.split('=')
+            except ValueError:
+                fact_name = fact_map
+                column_name = None
+            fact_names.append(fact_name)
+            if column_name:
+                column_names.append(column_name)
+            else:
+                column_names.append(fact_name)
+    else:
+        for obj in data:
+            for key in obj:
+                if key != 'certname':
+                    fact_names.append(key)
 
-    fact_names = sorted(list(set(fact_names)))
-    column_names = sorted(list({fact_name.replace('rmit_', '').replace('_', ' ')
-                                for fact_name in fact_names}))
-    fact_names.insert(0, u'certname')
-    column_names.insert(0, u'hostname')
+        fact_names = sorted(list(set(fact_names)))
+        fact_names.insert(0, u'certname')
+        column_names = fact_names
+
     header = ','.join(column_names)
-
     print header
+
     for obj in data:
         values = []
         for fact_name in fact_names:
