@@ -1,0 +1,76 @@
+#!/usr/bin/env python
+""" Go away pylint. """
+
+import json
+
+def load_json_data(data_file):
+    """ Go away pylint. """
+
+    with open(data_file) as json_data:
+        data = json.load(json_data)
+    return data
+
+
+def parse_json_data(data):
+    """ Go away pylint. """
+
+    new_objects = []
+    new_object = {}
+    for obj in data:
+        try:
+            if obj['certname'] != new_object['certname']:
+                new_objects.append(new_object)
+                new_object = {}
+                new_object['certname'] = obj['certname']
+        except KeyError:
+            new_object['certname'] = obj['certname']
+        new_object[obj['name']] = obj['value']
+    return new_objects
+
+
+def output_as_json(data):
+    """ Go away pylint. """
+
+    print json.dumps(data, indent=4)
+
+
+def output_as_csv(data):
+    """ Go away pylint. """
+
+    fact_names = []
+
+    for obj in data:
+        for key in obj:
+            if key != 'certname':
+                fact_names.append(key)
+
+    fact_names = sorted(list(set(fact_names)))
+    column_names = sorted(list({fact_name.replace('rmit_', '').replace('_', ' ')
+                                for fact_name in fact_names}))
+    fact_names.insert(0, u'certname')
+    column_names.insert(0, u'hostname')
+    header = ','.join(column_names)
+
+    print header
+    for obj in data:
+        values = []
+        for fact_name in fact_names:
+            try:
+                value = obj[fact_name]
+            except KeyError:
+                value = u'Undefined'
+            values.append(value)
+        line = ','.join(values)
+        print line
+
+
+def main():
+    """ Go away pylint. """
+
+    query_results = load_json_data('20181029_puppet_hosts.json')
+    new_json = parse_json_data(query_results)
+    # output_as_json(new_json)
+    output_as_csv(new_json)
+
+if __name__ == "__main__":
+    main()
