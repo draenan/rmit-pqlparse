@@ -63,11 +63,8 @@ def output_as_csv(data, fact_mappings=None):
                 fact_name, column_name = fact_map.split('=')
             except ValueError:
                 fact_name = fact_map
-                column_name = None
-            if column_name:
-                column_names.append(column_name)
-            else:
-                column_names.append(fact_name)
+                column_name = fact_name
+            column_names.append(column_name)
             fact_column_map[column_name] = fact_name
     else:
         for obj in data:
