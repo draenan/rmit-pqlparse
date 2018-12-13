@@ -28,11 +28,6 @@ def parse_json_data(data):
     return new_objects
 
 
-def output_as_json(data):
-    """ Go away pylint. """
-
-    print json.dumps(data, indent=4)
-
 def _generate_csv_output(data, column_names, fact_column_map=None):
     """ Go away pylint. """
 
@@ -86,6 +81,13 @@ def output_as_csv(data, fact_mappings=None):
 
     _generate_csv_output(data, column_names, fact_column_map)
 
+
+def output_as_json(data):
+    """ Go away pylint. """
+
+    print json.dumps(data, indent=4)
+
+
 def main():
     """ Go away pylint. """
 
@@ -93,6 +95,7 @@ def main():
     new_json = parse_json_data(query_results)
     # output_as_json(new_json)
     output_as_csv(new_json)
+
 
 if __name__ == "__main__":
     main()
