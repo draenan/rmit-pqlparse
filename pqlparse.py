@@ -33,12 +33,33 @@ def output_as_json(data):
 
     print json.dumps(data, indent=4)
 
+def _generate_csv_output(data, column_names, fact_column_map=None):
+    """ Go away pylint. """
+
+    header = ','.join(column_names)
+    print header
+
+    for obj in data:
+        values = []
+        for column_name in column_names:
+            try:
+                if fact_column_map:
+                    value = obj[fact_column_map[column_name]]
+                else:
+                    value = obj[column_name]
+            except KeyError:
+                value = u'Undefined'
+            values.append(value)
+        line = ','.join(values)
+        print line
+
 
 def output_as_csv(data, fact_mappings=None):
     """ Go away pylint. """
 
     column_names = []
     fact_names = set()
+    fact_column_map = {}
 
     if fact_mappings:
         fact_maps = fact_mappings.split(',')
@@ -48,12 +69,11 @@ def output_as_csv(data, fact_mappings=None):
             except ValueError:
                 fact_name = fact_map
                 column_name = None
-            fact_names.add(fact_name)
             if column_name:
                 column_names.append(column_name)
             else:
                 column_names.append(fact_name)
-        fact_names = sorted(list(fact_names))
+            fact_column_map[column_name] = fact_name
     else:
         for obj in data:
             for key in obj:
@@ -64,20 +84,7 @@ def output_as_csv(data, fact_mappings=None):
         fact_names.insert(0, u'certname')
         column_names = fact_names
 
-    header = ','.join(column_names)
-    print header
-
-    for obj in data:
-        values = []
-        for fact_name in fact_names:
-            try:
-                value = obj[fact_name]
-            except KeyError:
-                value = u'Undefined'
-            values.append(value)
-        line = ','.join(values)
-        print line
-
+    _generate_csv_output(data, column_names, fact_column_map)
 
 def main():
     """ Go away pylint. """
