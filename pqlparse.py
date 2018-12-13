@@ -49,7 +49,7 @@ def _generate_csv_output(data, column_names, fact_column_map=None):
                     value = obj[column_name]
             except KeyError:
                 value = u'Undefined'
-            values.append(value)
+            values.append(value.replace(',', '_'))
         line = ','.join(values)
         print line
 
