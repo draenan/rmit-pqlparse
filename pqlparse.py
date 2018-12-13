@@ -6,8 +6,12 @@ import json
 def load_json_data(data_file):
     """ Go away pylint. """
 
-    with open(data_file) as json_data:
-        data = json.load(json_data)
+    try:
+        with open(data_file) as json_data:
+            data = json.load(json_data)
+    except (IOError, ValueError) as err:
+        print err
+        exit(1)
     return data
 
 
