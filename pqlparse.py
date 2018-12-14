@@ -54,7 +54,7 @@ def parse_json_data(data):
     return new_objects
 
 
-def _generate_csv_output(data, column_names, fact_column_map=None):
+def __generate_csv_output(data, column_names, fact_column_map=None):
     """Takes JSON data, a list of column names, and an optional
     fact name to column name mapping and uses them to produce
     CSV output.
@@ -133,7 +133,7 @@ def output_as_csv(data, fact_mappings=None):
         fact_names.insert(0, u'certname')
         column_names = fact_names
 
-    _generate_csv_output(data, column_names, fact_column_map)
+    __generate_csv_output(data, column_names, fact_column_map)
 
 
 def output_as_json(data, json_type=None):
@@ -155,7 +155,7 @@ def output_as_json(data, json_type=None):
         print json.dumps(data, indent=4)
 
 
-def main():
+def _main():
     """Main function, for use when pqlparse.py is run as a script.
 
     Args:
@@ -195,4 +195,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    _main()
