@@ -12,7 +12,7 @@ def load_json_data(data_file):
             data = json.load(json_data)
     except (IOError, ValueError) as err:
         print err
-        exit(1)
+        raise
     return data
 
 
@@ -114,7 +114,10 @@ def main():
                        Implies that the output format will be CSV.''')
 
     args = parser.parse_args()
-    query_results = load_json_data(args.file)
+    try:
+        query_results = load_json_data(args.file)
+    except (IOError, ValueError):
+        exit(1)
     new_json = parse_json_data(query_results)
 
     if args.outformat == 'csv' or args.headers is not None:
