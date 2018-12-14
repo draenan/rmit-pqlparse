@@ -1,11 +1,24 @@
 #!/usr/bin/env python
-""" Go away pylint. """
+"""Processes a file containing PQL JSON output and produces either JSON
+with the the original objects merged on 'certname', or CSV output.
+"""
 
 import argparse
 import json
 
+__author__ = "Adrian Waters <adrian.waters@rmit.edu.au>"
+
 def load_json_data(data_file):
-    """ Go away pylint. """
+    """Loads the JSON data from the input file.
+
+    Args:
+        data_file: String containing the name of the data file.
+    Raises:
+        IOError: There was a problem opening the file.
+        ValueError: There was a problem loading the JSON from the file.
+    Returns:
+        Dictionary of the JSON data in the file.
+    """
 
     try:
         with open(data_file) as json_data:
@@ -17,7 +30,15 @@ def load_json_data(data_file):
 
 
 def parse_json_data(data):
-    """ Go away pylint. """
+    """Creates a new list of JSON objects by merging individual PQL output
+    JSON object on the 'certname' attribute.
+
+    Args:
+        data: List of dictionary representations of PQL JSON objects.
+    Returns:
+        New list of dictionary representations of JSON objects merged on
+        'certname' attribute.
+    """
 
     new_objects = []
     new_object = {}
@@ -34,8 +55,21 @@ def parse_json_data(data):
 
 
 def _generate_csv_output(data, column_names, fact_column_map=None):
-    """ Go away pylint. """
+    """Takes JSON data, a list of column names, and an optional
+    fact name to column name mapping and uses them to produce
+    CSV output.
 
+    Existence of this private function is primarily to stop pylint
+    from complaining about too many branches in output_as_csv().
+
+    Args:
+        data: A list of dictionaries representing JSON objects.
+        column_names: A sorted list of CSV column names.
+        fact_column_map: An optional dictionary mapping fact names to
+        column names.
+    Returns:
+        Nothing.  The output is sent direct to stdout via 'print'.
+    """
     header = ','.join(column_names)
     print header
 
@@ -55,7 +89,25 @@ def _generate_csv_output(data, column_names, fact_column_map=None):
 
 
 def output_as_csv(data, fact_mappings=None):
-    """ Go away pylint. """
+    """Takes a list of JSON objects and converts them to CSV output.
+
+    CSV columns can be defined via an optional String of fact name/column
+    pairs.  If the string is supplied the output will only contain the facts in
+    the string, otherwise all facts in the JSON data will be used (preceeded by
+    'certname' in the first column.)  If the namepair string is supplied and
+    a column name is missing from the pair the fact name will be used as the
+    column name.
+
+    For example: "certname=hostname,operatingsystem=Operating System",
+    "certname=hostname,operatingsystem"
+
+    Args:
+        data: A list of dictionaries representing JSON objects.
+        fact_mappings: Optional String of comma seperated fact name to
+        column name pairs (eg "certname=hostname,operatingsystem=Operating System").
+    Returns:
+        Nothing.  CSV content is output to stdin.
+    """
 
     column_names = []
     fact_names = set()
@@ -84,8 +136,18 @@ def output_as_csv(data, fact_mappings=None):
     _generate_csv_output(data, column_names, fact_column_map)
 
 
-def output_as_json(data, json_type):
-    """ Go away pylint. """
+def output_as_json(data, json_type=None):
+    """Takes a list of JSON objects and prints them out to stdin.
+
+    The format can be either minified JSON, or the default "pretty print" JSON.
+
+    Args:
+        data: A list of dictionaries representing JSON objects.
+        json_type: Optional string, outputs minified JSON if set to "minjson",
+        pretty print JSON is produced.
+    Returns:
+        Nothing.  JSON content is output to stdin.
+    """
 
     if json_type == 'minjson':
         print json.dumps(data)
@@ -94,10 +156,16 @@ def output_as_json(data, json_type):
 
 
 def main():
-    """ Go away pylint. """
+    """Main function, for use when pqlparse.py is run as a script.
 
-    parser = argparse.ArgumentParser(description='''Processes a JSON file containing
-                                     PQL output and produces either JSON with the
+    Args:
+        Whatever is in sys.argv as implemented by argparse.
+    Returns:
+        Return code "1" on error.
+    """
+
+    parser = argparse.ArgumentParser(description='''Processes a file containing
+                                     PQL JSON output and produces either JSON with
                                      the original objects merged on 'certname',
                                      or CSV output.''')
     group = parser.add_mutually_exclusive_group()
