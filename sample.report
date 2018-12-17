@@ -1,0 +1,37 @@
+#
+# Report definition file for use with mail_report.sh
+#
+# 'query' at least must be set, the others have defaults reflected in their
+# comment.
+
+# PQL query string.  Can be one line, or multiline for readability.Use
+# backslashes if the string is multiline. "order by certname"
+#
+query="facts[certname, name, value]{ \
+  ( \
+    name = 'operatingsystem' or \
+    name = 'operatingsystemmajrelease' \
+  ) \
+}"
+
+# Report format: json (default), minjson, csv.  This option is mutually
+# exclusive with the 'csv_header' option.
+#
+# format="json"
+
+# String denoting the CSV header line with optional fact name to column name
+# mapping.  This option is mutually exclusive with the 'format' option. If not
+# set the fact names will be used as column names, with 'certname' in the first
+# column.
+#
+# csv_header="certname=Hostname,operatingsystem=Operating System,operatingsystemmajrelease=OS Major Version"
+
+# Email address to send from.  RFC822-compatible email address string, defaults
+# to "Tech Services - Unix <isunx@rmit.edu.au>".
+#
+# mail_from="Tech Services - Unix <isunix@rmit.edu.au>"
+
+# Comma-separated list of email addresses to send the report to, defaults to
+# isunix@rmit.edu.au.
+#
+# mail_to="isunix@rmit.edu.au"
