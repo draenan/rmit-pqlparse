@@ -83,6 +83,8 @@ if [ ! -r "$report_definition" ]; then
     exit 1
 fi
 
+report_definition=$(readlink -f $report_definition)
+
 query= format= csv_header= mail_from= mail_to=
 source $report_definition
 
