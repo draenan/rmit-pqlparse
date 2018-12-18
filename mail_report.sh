@@ -81,10 +81,25 @@ if [ ! -r "$report_definition" ]; then
     exit 1
 fi
 
-query= format= csv_headers= mail_from= mail_to=
+query= format= csv_header= mail_from= mail_to=
 source $report_definition
 
+if [ ! -z "$format" ]; then
+    if [ "$format" != "csv" -a "$format" != "json" -a "$format" != "minjson" ]; then
+        echo "'format' not set to one of 'csv', 'json', or 'minjson'."
+        exit 1
+    fi
+fi
+
 [ -z "$format" -a -z "$csv_header" ] && format="csv"
+if [ ! -z "$format" ]; then
+    if [ "$format" == "csv" -a "$csv_header" ]; then
+        format=
+    elif [ "$csv_header" ]; then
+        echo "'csv_header' is defined but 'format' is defined as something other than 'csv'." >&2
+        exit 1
+    fi
+fi
 [ -z "$mail_to" ] && mail_to="isunix@rmit.edu.au"
 if [ -z "$mail_from" ]; then
     mail_from="\"Tech Services - Unix <isunix@rmit.edu.au>\""
@@ -98,13 +113,6 @@ if [ -z "$query" ]; then
 else
     query="\"$query\""
 fi
-if [ ! -z "$format" -a ! -z "$csv_header" ]; then
-    echo "'format' and 'csv_header' options are mutually exclusive." >&2
-    exit 1
-fi
-
-[ ! -z "$format" ] && format="-o $format"
-[ ! -z "$csv_header" ] && csv_header="-H \"$csv_header\""
 
 now="$(date +%Y%m%d_%H%M%S)"
 [ -z "$report_name" ] && report_name="${report_definition##*/}"
@@ -113,13 +121,14 @@ pql_output="${report_file}.temp.json"
 
 if [ "$format" == "json" -o "$format" == "minjson" ]; then
     file_ext="json"
-elif [ "$format" == "csv" -o ! -z "$csv_header" ]; then
-    file_ext="csv"
 else
-    file_ext="txt"
+    file_ext="csv"
 fi
 
 report_file="${report_file}.${file_ext}"
+
+[ ! -z "$format" ] && format="-o $format"
+[ ! -z "$csv_header" ] && csv_header="-H \"$csv_header\""
 
 [ "$verbose" ] && echo "Running puppet query..."
 if [ "$debug" ]; then
