@@ -1,4 +1,7 @@
 *.json
 *.csv
 *.pyc
+*.html
+*.report
+!sample.report
 
