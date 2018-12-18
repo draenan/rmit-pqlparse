@@ -37,7 +37,7 @@ while getopts :hdvn opt; do
             echo "    file            File containing report definition"
             echo
             echo "Optional parameters:"
-            echo "    -h              Show thie help message and exit"
+            echo "    -h              Show this help message and exit"
             echo "    -d              Debug mode (noop, implies '-n')"
             echo "    -v              Be verbose"
             echo "    -n              Do not email report"
