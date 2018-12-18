@@ -30,7 +30,7 @@ query="facts[certname, name, value]{ \
 # String denoting the CSV header line with optional fact name to column name
 # mapping.  This option is mutually exclusive with the 'format' option. If not
 # set and the format is not set to one of the two JSON types the fact names
-# will be used as column names, with 'certname' in the first # column.
+# will be used as column names, with 'certname' in the first column.
 #
 # csv_header="certname=Hostname,operatingsystem=Operating System,operatingsystemmajrelease=OS Major Version"
 
