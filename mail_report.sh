@@ -11,7 +11,7 @@
 # Author: Adrian Waters <adrian.waters@rmit.edu.au>
 #
 
-PATH=/bin:/usr/bin
+PATH=/bin:/usr/bin:/opt/puppetlabs/bin
 
 progname=${0##*/}
 
@@ -102,21 +102,17 @@ if [ ! -z "$format" ]; then
 fi
 [ -z "$mail_to" ] && mail_to="isunix@rmit.edu.au"
 if [ -z "$mail_from" ]; then
-    mail_from="\"Tech Services - Unix <isunix@rmit.edu.au>\""
-else
-    mail_from="\"$mail_from\""
+    mail_from="Tech Services - Unix <isunix@rmit.edu.au>"
 fi
 
 if [ -z "$query" ]; then
     echo "No PQL query set." >&2
     exit 1
-else
-    query="\"$query\""
 fi
 
 now="$(date +%Y%m%d_%H%M%S)"
 [ -z "$report_name" ] && report_name="${report_definition##*/}"
-report_file="/tmp/${now}_${report_name%%\.*}"
+report_name="${report_name%%\.*}"
 pql_output="${report_file}.temp.json"
 
 if [ "$format" == "json" -o "$format" == "minjson" ]; then
@@ -125,16 +121,15 @@ else
     file_ext="csv"
 fi
 
-report_file="${report_file}.${file_ext}"
+report_file="/tmp/${now}_${report_name%%\.*}.${file_ext}"
 
 [ ! -z "$format" ] && format="-o $format"
-[ ! -z "$csv_header" ] && csv_header="-H \"$csv_header\""
 
 [ "$verbose" ] && echo "Running puppet query..."
 if [ "$debug" ]; then
     echo "DEBUG: /usr/local/bin/puppet query $query > $pql_output"
 else
-    /usr/local/bin/puppet query $query > $pql_output
+    puppet query "$query" > $pql_output
 fi
 
 if [ "$?" -ne 0 ]; then
@@ -145,10 +140,19 @@ fi
 [ "$verbose" ] && echo "Processing query results..."
 
 if [ "$debug" ]; then
-    echo "DEBUG: /opt/RMIT/bin/pqlparse.py $format $csv_header $pql_output > ${report_file}"
+    if [ "$csv_header" ]; then
+        echo "DEBUG: /opt/RMIT/bin/pqlparse.py $format -H "$csv_header" $pql_output > ${report_file}"
+    else
+        echo "DEBUG: /opt/RMIT/bin/pqlparse.py $format $pql_output > ${report_file}"
+    fi
 else
-    /opt/RMIT/bin/pqlparse.py $format $csv_header $pql_output > ${report_file}
+    if [ "$csv_header" ]; then
+        /opt/RMIT/bin/pqlparse.py $format -H "$csv_header" $pql_output > ${report_file}
+    else
+        /opt/RMIT/bin/pqlparse.py $format $pql_output > ${report_file}
+    fi
 fi
+
 if [ "$?" -ne 0 ]; then
     echo "Error running 'pqlparse.py'." >&2
     cleanup
@@ -156,9 +160,9 @@ if [ "$?" -ne 0 ]; then
 fi
 if [ -z "$nomail" -a  ! "$debug" ]; then
     [ "$verbose" ] && echo "Sending report ${report_file}..."
-    cat <<EOF | mailx -r $mail_from -s "Output of report \"$report_name\" attached." -a $report_file $mail_to
+    cat <<EOF | mailx -r "$mail_from" -s "Output of report \"$report_name\" attached." -a $report_file $mail_to
 Please find attached the output of the PuppetDB Query Report
-\"${report_name}\" as defined in the file \"${report_definition}\".
+"${report_name}" as defined in the file "${report_definition}".
 
 This report represents the current state of hosts known to Puppet.  It
 does not include:
