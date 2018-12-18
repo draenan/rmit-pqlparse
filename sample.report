@@ -17,6 +17,7 @@ query="facts[certname, name, value]{ \
     name = 'operatingsystem' or \
     name = 'operatingsystemmajrelease' \
   ) \
+  order by certname \
 }"
 
 # Report format: csv (default), json, minjson.  This option is mutually
