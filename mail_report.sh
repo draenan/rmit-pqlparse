@@ -164,7 +164,8 @@ if [ -z "$nomail" -a  ! "$debug" ]; then
     [ "$verbose" ] && echo "Sending report ${report_file}..."
     cat <<EOF | mailx -r "$mail_from" -s "Output of report \"$report_name\" attached." -a $report_file $mail_to
 Please find attached the output of the PuppetDB Query Report
-"${report_name}" as defined in the file "${report_definition}".
+"${report_name}" as defined in the file "${report_definition}"
+on the Puppet Master.
 
 This report represents the current state of hosts known to Puppet.  It
 does not include:
