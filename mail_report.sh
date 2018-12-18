@@ -80,7 +80,7 @@ fi
 query= format= csv_headers= mail_from= mail_to=
 source $report_definition
 
-[ -z "$format" -a -z "$csv_header" ] && format="json"
+[ -z "$format" -a -z "$csv_header" ] && format="csv"
 [ -z "$mail_to" ] && mail_to="isunix@rmit.edu.au"
 if [ -z "$mail_from" ]; then
     mail_from="\"Tech Services - Unix <isunix@rmit.edu.au>\""

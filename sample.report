@@ -19,15 +19,15 @@ query="facts[certname, name, value]{ \
   ) \
 }"
 
-# Report format: json (default), minjson, csv.  This option is mutually
+# Report format: csv (default), json, minjson.  This option is mutually
 # exclusive with the 'csv_header' option.
 #
-# format="json"
+# format="csv"
 
 # String denoting the CSV header line with optional fact name to column name
 # mapping.  This option is mutually exclusive with the 'format' option. If not
-# set the fact names will be used as column names, with 'certname' in the first
-# column.
+# set and the format is not set to one of the two JSON types the fact names
+# will be used as column names, with 'certname' in the first # column.
 #
 # csv_header="certname=Hostname,operatingsystem=Operating System,operatingsystemmajrelease=OS Major Version"
 
