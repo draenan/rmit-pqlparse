@@ -19,14 +19,6 @@ usage() {
     echo "Usage: $progname [-d] [-v] [-n] file"
 }
 
-# if [ $(/usr/bin/id -u) -ne "0" ]; then
-#     echo "Script needs to be run as root." >&2
-#     exit 1
-# elif [ ! -r "${HOME}/.puppetlabs/token" ]; then
-#     echo "Could not read ${HOME}/.puppetlabs/token" >&2
-#     exit 1
-# fi
-
 cleanup() {
     [ "$verbose" ] && echo "Cleaning up files ..."
     for file in $pql_output $report_file; do
@@ -73,6 +65,16 @@ if [ "$#" -lt 1 ];then
 fi
 
 shift $((OPTIND - 1))
+
+if [ -z "$debug" ]; then
+    if [ $(/usr/bin/id -u) -ne "0" ]; then
+        echo "Script needs to be run as root." >&2
+        exit 1
+    elif [ ! -r "${HOME}/.puppetlabs/token" ]; then
+        echo "Could not read ${HOME}/.puppetlabs/token" >&2
+        exit 1
+    fi
+fi
 
 report_definition="$1"
 
