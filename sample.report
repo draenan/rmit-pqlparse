@@ -9,8 +9,8 @@
 #
 # report_name="sample'
 
-# PQL query string.  Can be one line, or multiline for readability.Use
-# backslashes if the string is multiline. "order by certname"
+# PQL query string.  Can be one line, or multiline for readability.  Use
+# backslashes if the string is multiline.
 #
 query="facts[certname, name, value]{ \
   ( \
