@@ -4,6 +4,11 @@
 # 'query' at least must be set, the others have defaults reflected in their
 # comment.
 
+# By default the report file will be named after this file, sans ".report".
+# You can override it here if you want.  No whitespace please.
+#
+# report_name="sample'
+
 # PQL query string.  Can be one line, or multiline for readability.Use
 # backslashes if the string is multiline. "order by certname"
 #

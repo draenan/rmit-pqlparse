@@ -103,7 +103,7 @@ fi
 [ ! -z "$csv_header" ] && csv_header="-H \"$csv_header\""
 
 now="$(date +%Y%m%d_%H%M%S)"
-report_name="${report_definition##*/}"
+[ -z "$report_name" ] && report_name="${report_definition##*/}"
 report_file="/tmp/${now}_${report_name%%\.*}"
 pql_output="${report_file}.temp.json"
 
@@ -133,8 +133,9 @@ if [ "$?" -ne 0 ]; then
 fi
 if [ -z "$nomail" ]; then
     [ "$verbose" ] && echo "Sending report ${report_file}..."
-    cat <<EOF | mailx -r $mail_from -s "Output of \"$report_name\" report attached." -a $report_file $mail_to
-Please find attached the output of the PuppetDB Query Report \"${report_name}\".
+    cat <<EOF | mailx -r $mail_from -s "Output of report \"$report_name\" attached." -a $report_file $mail_to
+Please find attached the output of the PuppetDB Query Report
+\"${report_name}\" as defined in the file \"${report_definition}\".
 
 This report represents the current state of hosts known to Puppet.  It
 does not include:
