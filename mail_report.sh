@@ -16,7 +16,7 @@ PATH=/bin:/usr/bin
 progname=${0##*/}
 
 usage() {
-    echo "Usage: $progname [-v] [-n] file"
+    echo "Usage: $progname [-d] [-v] [-n] file"
 }
 
 # if [ $(/usr/bin/id -u) -ne "0" ]; then
@@ -34,21 +34,25 @@ cleanup() {
     done
 }
 
-verbose= nomail= report_definition=
+debug= verbose= nomail= report_definition=
 
-while getopts :hvn opt; do
+while getopts :hdvn opt; do
     case $opt in
         h)
             usage
             echo
             echo "Required parameter:"
-            echo "    file            File containing report definition."
+            echo "    file            File containing report definition"
             echo
-            echo "Optional paramters:"
-            echo "    -h              Show thie help message and exit."
-            echo "    -v              Be verbose."
-            echo "    -n              Do not email report."
+            echo "Optional parameters:"
+            echo "    -h              Show thie help message and exit"
+            echo "    -d              Debug mode (noop, implies '-n')"
+            echo "    -v              Be verbose"
+            echo "    -n              Do not email report"
             exit
+            ;;
+        d)
+            debug=1
             ;;
         v)
             verbose=1
@@ -118,20 +122,30 @@ fi
 report_file="${report_file}.${file_ext}"
 
 [ "$verbose" ] && echo "Running puppet query..."
-/usr/local/bin/puppet query $query > $pql_output
+if [ "$debug" ]; then
+    echo "DEBUG: /usr/local/bin/puppet query $query > $pql_output"
+else
+    /usr/local/bin/puppet query $query > $pql_output
+fi
+
 if [ "$?" -ne 0 ]; then
     echo "Error running 'puppet query'." >&2
     cleanup
     exit 1
 fi
 [ "$verbose" ] && echo "Processing query results..."
-/opt/RMIT/bin/pqlparse.py $format $csv_header $pql_output > ${report_file}
+
+if [ "$debug" ]; then
+    echo "DEBUG: /opt/RMIT/bin/pqlparse.py $format $csv_header $pql_output > ${report_file}"
+else
+    /opt/RMIT/bin/pqlparse.py $format $csv_header $pql_output > ${report_file}
+fi
 if [ "$?" -ne 0 ]; then
     echo "Error running 'pqlparse.py'." >&2
     cleanup
     exit 1
 fi
-if [ -z "$nomail" ]; then
+if [ -z "$nomail" -a  ! "$debug" ]; then
     [ "$verbose" ] && echo "Sending report ${report_file}..."
     cat <<EOF | mailx -r $mail_from -s "Output of report \"$report_name\" attached." -a $report_file $mail_to
 Please find attached the output of the PuppetDB Query Report
@@ -150,7 +164,7 @@ EOF
         exit 1
     fi
 else
-    echo "TESTING: Would have sent report ${report_file}"
+    echo "DEBUG: Would have sent report ${report_file}"
     echo "         FROM ${mail_from}"
     echo "         TO   ${mail_to}."
 fi
