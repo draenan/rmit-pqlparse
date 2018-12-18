@@ -113,7 +113,7 @@ fi
 now="$(date +%Y%m%d_%H%M%S)"
 [ -z "$report_name" ] && report_name="${report_definition##*/}"
 report_name="${report_name%%\.*}"
-pql_output="${report_file}.temp.json"
+pql_output="/tmp/${now}_${report_name}.temp.json"
 
 if [ "$format" == "json" -o "$format" == "minjson" ]; then
     file_ext="json"
@@ -121,7 +121,7 @@ else
     file_ext="csv"
 fi
 
-report_file="/tmp/${now}_${report_name%%\.*}.${file_ext}"
+report_file="/tmp/${now}_${report_name}.${file_ext}"
 
 [ ! -z "$format" ] && format="-o $format"
 
