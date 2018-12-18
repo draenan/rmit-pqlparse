@@ -129,7 +129,7 @@ report_file="/tmp/${now}_${report_name}.${file_ext}"
 
 [ "$verbose" ] && echo "Running puppet query..."
 if [ "$debug" ]; then
-    echo "DEBUG: /usr/local/bin/puppet query $query > $pql_output"
+    echo "DEBUG: /usr/local/bin/puppet query \"$query\" > $pql_output"; echo
 else
     puppet query "$query" > $pql_output
 fi
@@ -143,9 +143,9 @@ fi
 
 if [ "$debug" ]; then
     if [ "$csv_header" ]; then
-        echo "DEBUG: /opt/RMIT/bin/pqlparse.py $format -H "$csv_header" $pql_output > ${report_file}"
+        echo "DEBUG: /opt/RMIT/bin/pqlparse.py $format -H \"$csv_header\" $pql_output > ${report_file}"; echo
     else
-        echo "DEBUG: /opt/RMIT/bin/pqlparse.py $format $pql_output > ${report_file}"
+        echo "DEBUG: /opt/RMIT/bin/pqlparse.py $format $pql_output > ${report_file}"; echo
     fi
 else
     if [ "$csv_header" ]; then
@@ -181,7 +181,7 @@ EOF
 else
     echo "DEBUG: Would have sent report ${report_file}"
     echo "         FROM ${mail_from}"
-    echo "         TO   ${mail_to}."
+    echo "         TO   ${mail_to}."; echo
 fi
 
 cleanup
