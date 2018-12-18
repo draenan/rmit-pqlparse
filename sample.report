@@ -10,7 +10,9 @@
 # report_name="sample'
 
 # PQL query string.  Can be one line, or multiline for readability.  Use
-# backslashes if the string is multiline.
+# backslashes if the string is multiline. "order by certname" is not required
+# but will assist with ensuring that the data is listed in alphabetical order
+# by certname in CSV output.
 #
 query="facts[certname, name, value]{ \
   ( \
