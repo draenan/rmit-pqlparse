@@ -33,24 +33,24 @@ objects derived via PQL-based queries to PuppetDB of the form:
 [
   {
     "certname": "foo.example.com",
-	"name": "operatingsystem",
-	"value": "RedHat"
+    "name": "operatingsystem",
+    "value": "RedHat"
   },
   {
     "certname": "foo.example.com",
-	"name": "operatingsystemmajrelease",
-	"value": "7"
+    "name": "operatingsystemmajrelease",
+    "value": "7"
   }
 ]
 ```
-and convert it  to:
+and convert it to:
 
 ```
 [
   {
     "certname": "foo.example.com",
-	"operatingsystem": "RedHat",
-	"operatingsystemmajrelease": "7"
+    "operatingsystem": "RedHat",
+    "operatingsystemmajrelease": "7"
   }
 ]
 ```
@@ -71,12 +71,13 @@ Hostname,operatingsystem
 foo.example.com,RedHat
 ```
 
+
 ## Helper Script
 
 A helper script, `mail_report.sh` has been included to assist with generating
 and emailing reports based on report definitions in a config file consisting of
 various shell variables which are then sourced by the script.  Check the
-inlcuded `sample.report` for further information.
+included `sample.report` for further information.
 
 ```
 Usage: mail_report.sh [-d] [-v] [-n] file
