@@ -3,6 +3,7 @@
 #
 # 'query' at least must be set, the others have defaults reflected in their
 # comment.
+#
 
 # By default the report file will be named after this file, sans ".report".
 # You can override it here if you want.  No whitespace please.

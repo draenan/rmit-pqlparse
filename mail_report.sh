@@ -115,8 +115,12 @@ if [ -z "$query" ]; then
 fi
 
 now="$(date +%Y%m%d_%H%M%S)"
-[ -z "$report_name" ] && report_name="${report_definition##*/}"
-report_name="${report_name%%\.*}"
+
+if [ -z "$report_name" ]; then
+    report_name="${report_definition##*/}"
+    report_name="${report_name%%\.*}"
+fi
+
 pql_output="/tmp/${now}_${report_name}.temp.json"
 
 if [ "$format" == "json" -o "$format" == "minjson" ]; then
@@ -145,13 +149,13 @@ fi
 
 if [ "$debug" ]; then
     if [ "$csv_header" ]; then
-        echo "DEBUG: pqlparse.py $format -H \"$csv_header\" $pql_output > ${report_file}"; echo
+        echo "DEBUG: pqlparse.py -H \"$csv_header\" $pql_output > ${report_file}"; echo
     else
         echo "DEBUG: pqlparse.py $format $pql_output > ${report_file}"; echo
     fi
 else
     if [ "$csv_header" ]; then
-        pqlparse.py $format -H "$csv_header" $pql_output > ${report_file}
+        pqlparse.py -H "$csv_header" $pql_output > ${report_file}
     else
         pqlparse.py $format $pql_output > ${report_file}
     fi
