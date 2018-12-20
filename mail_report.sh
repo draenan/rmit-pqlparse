@@ -131,8 +131,6 @@ fi
 
 report_file="/tmp/${now}_${report_name}.${file_ext}"
 
-[ ! -z "$format" ] && format="-o $format"
-
 [ "$verbose" ] && echo "Running puppet query..."
 if [ "$debug" ]; then
     echo "DEBUG: puppet query \"$query\" > $pql_output"; echo
@@ -151,13 +149,13 @@ if [ "$debug" ]; then
     if [ "$csv_header" ]; then
         echo "DEBUG: pqlparse.py -H \"$csv_header\" $pql_output > ${report_file}"; echo
     else
-        echo "DEBUG: pqlparse.py $format $pql_output > ${report_file}"; echo
+        echo "DEBUG: pqlparse.py -o $format $pql_output > ${report_file}"; echo
     fi
 else
     if [ "$csv_header" ]; then
         pqlparse.py -H "$csv_header" $pql_output > ${report_file}
     else
-        pqlparse.py $format $pql_output > ${report_file}
+        pqlparse.py -o $format $pql_output > ${report_file}
     fi
 fi
 
