@@ -54,38 +54,23 @@ def parse_json_data(data):
     return new_objects
 
 
-def __generate_csv_output(data, column_names, fact_column_map=None):
-    """Takes JSON data, a list of column names, and an optional
-    fact name to column name mapping and uses them to produce
-    CSV output.
+def output_as_json(data, json_type=None):
+    """Takes a list of JSON objects and prints them out to stdin.
 
-    Existence of this private function is primarily to stop pylint
-    from complaining about too many branches in output_as_csv().
+    The format can be either minified JSON, or the default "pretty print" JSON.
 
     Args:
         data: A list of dictionaries representing JSON objects.
-        column_names: A sorted list of CSV column names.
-        fact_column_map: An optional dictionary mapping fact names to
-        column names.
+        json_type: Optional string, outputs minified JSON if set to "minjson",
+        pretty print JSON is produced.
     Returns:
-        Nothing.  The output is sent direct to stdout via 'print'.
+        Nothing.  JSON content is output to stdin.
     """
-    header = ','.join(column_names)
-    print header
 
-    for obj in data:
-        values = []
-        for column_name in column_names:
-            try:
-                if fact_column_map:
-                    value = obj[fact_column_map[column_name]]
-                else:
-                    value = obj[column_name]
-            except KeyError:
-                value = u'Undefined'
-            values.append(value.replace(',', '_'))
-        line = ','.join(values)
-        print line
+    if json_type == 'minjson':
+        print json.dumps(data)
+    else:
+        print json.dumps(data, indent=4)
 
 
 def output_as_csv(data, fact_mappings=None):
@@ -136,23 +121,38 @@ def output_as_csv(data, fact_mappings=None):
     __generate_csv_output(data, column_names, fact_column_map)
 
 
-def output_as_json(data, json_type=None):
-    """Takes a list of JSON objects and prints them out to stdin.
+def __generate_csv_output(data, column_names, fact_column_map=None):
+    """Takes JSON data, a list of column names, and an optional
+    fact name to column name mapping and uses them to produce
+    CSV output.
 
-    The format can be either minified JSON, or the default "pretty print" JSON.
+    Existence of this private function is primarily to stop pylint
+    from complaining about too many branches in output_as_csv().
 
     Args:
         data: A list of dictionaries representing JSON objects.
-        json_type: Optional string, outputs minified JSON if set to "minjson",
-        pretty print JSON is produced.
+        column_names: A sorted list of CSV column names.
+        fact_column_map: An optional dictionary mapping fact names to
+        column names.
     Returns:
-        Nothing.  JSON content is output to stdin.
+        Nothing.  The output is sent direct to stdout via 'print'.
     """
+    header = ','.join(column_names)
+    print header
 
-    if json_type == 'minjson':
-        print json.dumps(data)
-    else:
-        print json.dumps(data, indent=4)
+    for obj in data:
+        values = []
+        for column_name in column_names:
+            try:
+                if fact_column_map:
+                    value = obj[fact_column_map[column_name]]
+                else:
+                    value = obj[column_name]
+            except KeyError:
+                value = u'Undefined'
+            values.append(value.replace(',', '_'))
+        line = ','.join(values)
+        print line
 
 
 def _main():
