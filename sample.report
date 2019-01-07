@@ -11,9 +11,11 @@
 # report_name="sample'
 
 # PQL query string.  Can be one line, or multiline for readability.  Use
-# backslashes if the string is multiline. "order by certname" is not required
-# but will assist with ensuring that the data is listed in alphabetical order
-# by certname in CSV output.
+# backslashes if the string is multiline. "order by certname" is recommended
+# to allow for hosts to be entered into a CSV file in ascending order,
+# and also to guard against an implementation bug in pqlparse.py that
+# currently isn't triggered due to puppet-query returning JSON results
+# grouped by certname, rather than standard unordered JSON.
 #
 query="facts[certname, name, value]{ \
   ( \

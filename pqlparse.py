@@ -40,6 +40,14 @@ def parse_json_data(data):
         'certname' attribute.
     """
 
+    """
+    Note that there is a logic bug in this code that would manifest if the
+    output of puppet-query was proper unordered JSON.  However puppet-query
+    appears to be outputting JSON grouped by "certname", so the bug doesn't
+    trigger.  To guard against this changing the query should have an
+    "order by certname" clause.
+    """
+
     new_objects = []
     new_object = {}
     for obj in data:
