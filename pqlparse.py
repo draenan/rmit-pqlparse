@@ -59,6 +59,7 @@ def parse_json_data(data):
         except KeyError:
             new_object['certname'] = obj['certname']
         new_object[obj['name']] = obj['value']
+    new_objects.append(new_object)
     return new_objects
 
 
