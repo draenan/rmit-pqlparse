@@ -77,7 +77,7 @@ def output_as_json(data, json_type=None):
     """
 
     if json_type == 'minjson':
-        print json.dumps(data)
+        print json.dumps(data, separators=(',', ':'))
     else:
         print json.dumps(data, indent=4)
 
