@@ -1,10 +1,11 @@
 #!/usr/bin/env python
-"""Processes a file containing PQL JSON output and produces either JSON
+"""Processes a file containing PQL output and produces either JSON
 with the the original objects merged on 'certname', or CSV output.
 """
 
 import argparse
 import json
+import sys
 
 __author__ = "Adrian Waters <adrian.waters@rmit.edu.au>"
 
@@ -12,7 +13,8 @@ def load_json_data(data_file):
     """Loads the JSON data from the input file.
 
     Args:
-        data_file: String containing the name of the data file.
+        data_file: Reference to a file object containing the data to
+        parse.
     Raises:
         IOError: There was a problem opening the file.
         ValueError: There was a problem loading the JSON from the file.
@@ -21,8 +23,7 @@ def load_json_data(data_file):
     """
 
     try:
-        with open(data_file) as json_data:
-            data = json.load(json_data)
+        data = json.load(data_file)
     except (IOError, ValueError) as err:
         print err
         raise
@@ -170,16 +171,18 @@ def _main():
     Args:
         Whatever is in sys.argv as implemented by argparse.
     Returns:
-        Return code "1" on error.
+        Return code "1" on error, "130" on interrupt.
     """
 
     parser = argparse.ArgumentParser(description='''Processes a file containing
-                                     PQL JSON output and produces either JSON with
+                                     PQL output and produces either JSON with
                                      the original objects merged on 'certname',
                                      or CSV output.''')
     group = parser.add_mutually_exclusive_group()
 
-    parser.add_argument('file', help='File of PQL JSON output to process')
+    parser.add_argument('infile', nargs='?', type=argparse.FileType('r'),
+                        default=sys.stdin,
+                        help='''Filename of PQL output to process.''')
     group.add_argument('-o', '--outformat', choices=['json', 'minjson', 'csv'],
                        help='''Choose the output format: JSON (the default), minified
                        JSON, or CSV.  Use of this option for CSV will produce output
@@ -191,10 +194,21 @@ def _main():
                        Implies that the output format will be CSV.''')
 
     args = parser.parse_args()
+
     try:
-        query_results = load_json_data(args.file)
-    except (IOError, ValueError):
-        exit(1)
+        with open(args.infile) as data_file:
+            try:
+                query_results = load_json_data(data_file)
+            except (IOError, ValueError):
+                sys.exit(1)
+    except TypeError:
+        try:
+            query_results = load_json_data(args.infile)
+        except (IOError, ValueError):
+            sys.exit(1)
+        except KeyboardInterrupt:
+            sys.exit(130)
+
     new_json = parse_json_data(query_results)
 
     if args.outformat == 'csv' or args.headers is not None:

@@ -1,13 +1,13 @@
 # pqlparse.py - Python 2 parser for Puppet Query Language JSON output
 
 ```
-usage: pqlparse.py [-h] [-o {json,minjson,csv} | -H HEADERS] file
+usage: pqlparse.py [-h] [-o {json,minjson,csv} | -H HEADERS] [infile]
 
-Processes a file containing PQL JSON output and produces either JSON with the
+Processes a file containing PQL output and produces either JSON with the
 original objects merged on 'certname', or CSV output.
 
 positional arguments:
-  file                  File of PQL JSON output to process
+  infile                Filename of PQL output to process.
 
 optional arguments:
   -h, --help            show this help message and exit
