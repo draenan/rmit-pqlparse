@@ -4,6 +4,7 @@ with the the original objects merged on 'certname', or CSV output.
 """
 
 import argparse
+import errno
 import json
 import sys
 
@@ -211,10 +212,14 @@ def _main():
 
     new_json = parse_json_data(query_results)
 
-    if args.outformat == 'csv' or args.headers is not None:
-        output_as_csv(new_json, args.headers)
-    else:
-        output_as_json(new_json, args.outformat)
+    try:
+        if args.outformat == 'csv' or args.headers is not None:
+            output_as_csv(new_json, args.headers)
+        else:
+            output_as_json(new_json, args.outformat)
+    except IOError as err:
+        if err.errno == errno.EPIPE:
+            pass
 
 
 if __name__ == "__main__":
