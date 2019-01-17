@@ -197,18 +197,11 @@ def _main():
     args = parser.parse_args()
 
     try:
-        with open(args.infile) as data_file:
-            try:
-                query_results = load_json_data(data_file)
-            except (IOError, ValueError):
-                sys.exit(1)
-    except TypeError:
-        try:
-            query_results = load_json_data(args.infile)
-        except (IOError, ValueError):
-            sys.exit(1)
-        except KeyboardInterrupt:
-            sys.exit(130)
+        query_results = load_json_data(args.infile)
+    except (IOError, ValueError):
+        sys.exit(1)
+    except KeyboardInterrupt:
+        sys.exit(130)
 
     new_json = parse_json_data(query_results)
 
