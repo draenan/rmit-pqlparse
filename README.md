@@ -80,16 +80,16 @@ various shell variables which are then sourced by the script.  Check the
 included `sample.report` for further information.
 
 ```
-Usage: mail_report.sh [-d] [-v] [-n] file
+Usage: mail_report.sh [-d] [-v] [-n] [-m email_address] file
 
 Required parameter:
-    file            File containing report definition
+    file              File containing report definition
 
 Optional parameters:
-    -h              Show this help message and exit
-    -d              Debug mode (noop, implies '-n')
-    -v              Be verbose
-    -n              Do not email report
-
+    -h                Show this help message and exit
+    -d                Debug mode (noop, implies '-n')
+    -v                Be verbose
+    -n                Do not email report
+    -m email_address  Mail output to email_address
 ```
 
