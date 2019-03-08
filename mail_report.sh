@@ -16,7 +16,7 @@ PATH=/bin:/usr/bin:/opt/puppetlabs/bin:/opt/RMIT/bin
 progname=${0##*/}
 
 usage() {
-    echo "Usage: $progname [-d] [-v] [-n] file"
+    echo "Usage: $progname [-d] [-v] [-n] [-m email_address] file"
 }
 
 cleanup() {
@@ -26,21 +26,22 @@ cleanup() {
     done
 }
 
-debug= verbose= nomail= report_definition=
+debug= verbose= nomail= mail_to_override= report_definition=
 
-while getopts :hdvn opt; do
+while getopts :hdvnm: opt; do
     case $opt in
         h)
             usage
             echo
             echo "Required parameter:"
-            echo "    file            File containing report definition"
+            echo "    file              File containing report definition"
             echo
             echo "Optional parameters:"
-            echo "    -h              Show this help message and exit"
-            echo "    -d              Debug mode (noop, implies '-n')"
-            echo "    -v              Be verbose"
-            echo "    -n              Do not email report"
+            echo "    -h                Show this help message and exit"
+            echo "    -d                Debug mode (noop, implies '-n')"
+            echo "    -v                Be verbose"
+            echo "    -n                Do not email report"
+            echo "    -m email_address  Mail output to email_address"
             exit
             ;;
         d)
@@ -51,6 +52,9 @@ while getopts :hdvn opt; do
             ;;
         n)
             nomail=1
+            ;;
+        m)
+            mail_to_override=$OPTARG
             ;;
         '?')
             usage >&2
@@ -104,6 +108,7 @@ if [ ! -z "$format" ]; then
         exit 1
     fi
 fi
+[ ! -z "$mail_to_override" ] && mail_to="$mail_to_override"
 [ -z "$mail_to" ] && mail_to="isunix@rmit.edu.au"
 if [ -z "$mail_from" ]; then
     mail_from="Tech Services - Unix <isunix@rmit.edu.au>"
