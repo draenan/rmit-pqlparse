@@ -172,16 +172,13 @@ fi
 if [ -z "$nomail" -a  ! "$debug" ]; then
     [ "$verbose" ] && echo "Sending report ${report_file}..."
     cat <<EOF | mailx -r "$mail_from" -s "Output of report \"$report_name\" attached." -a $report_file $mail_to
-Please find attached the output of the PuppetDB Query Report
-"${report_name}" as defined in the file "${report_definition}"
-on the Puppet Master.
+Please find attached the output of the PuppetDB Query Report "${report_name}" as defined in the file "${report_definition}" on the Puppet Master.
 
-This report represents the current state of hosts known to Puppet.  It
-does not include:
+This report represents the current state of hosts known to Puppet.  It does not include:
 
 - Hosts that are not managed by Puppet
-- Hosts that have not been reporting to Puppet for various reasons for
-  time exceeding the 'node-ttl' setting.
+- Hosts that have not been reporting to Puppet for various reasons for time exceeding the 'node-ttl' setting.
+
 EOF
     if [ "$?" -ne 0 ] ; then
         echo "Error sending mail." >&2
