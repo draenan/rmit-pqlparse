@@ -108,11 +108,10 @@ if [ ! -z "$format" ]; then
         exit 1
     fi
 fi
+
 [ ! -z "$mail_to_override" ] && mail_to="$mail_to_override"
-[ -z "$mail_to" ] && mail_to="isunix@rmit.edu.au"
-if [ -z "$mail_from" ]; then
-    mail_from="Tech Services - Unix <isunix@rmit.edu.au>"
-fi
+mail_to=${mail_to:="isunix@rmit.edu.au"}
+mail_from=${mail_from:="Tech Services - Unix <isunix@rmit.edu.au>"}
 
 if [ -z "$query" ]; then
     echo "No PQL query set." >&2
