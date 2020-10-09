@@ -38,9 +38,9 @@ query="facts[certname, name, value]{ \
 # csv_header="certname=Hostname,operatingsystem=Operating System,operatingsystemmajrelease=OS Major Version"
 
 # Email address to send from.  RFC822-compatible email address string, defaults
-# to "Tech Services - Unix <isunx@rmit.edu.au>".
+# to "Server Platforms - Unix <isunx@rmit.edu.au>".
 #
-# mail_from="Tech Services - Unix <isunix@rmit.edu.au>"
+# mail_from="Server Platforms - Unix <isunix@rmit.edu.au>"
 
 # Comma-separated list of email addresses to send the report to, defaults to
 # isunix@rmit.edu.au.
